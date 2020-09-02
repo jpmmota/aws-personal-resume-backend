@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Test Pipeline Lambda
+Resources:
+  Visits:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: Visits
+      PrimaryKey:
+        Name: siteName
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  AddVisitFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: add-visit.lambda_handler
+      Runtime: python3.8
+      Timeout: 60
+      CodeUri: AddVisitFunction
+      Policies:
+      - AmazonDynamoDBFullAccess
+      Description: Samples SAM Lambda Deployment
+      Events:
+        GetRequest:
+          Type: Api
+          Properties:
+            Path: /visits/store
+            Method: get
+Outputs:
+  ProdDataEndpoint:
+    Description: API Prod stage endpoint
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/

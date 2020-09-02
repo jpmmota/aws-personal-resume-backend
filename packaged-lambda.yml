@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Test Pipeline Lambda
+Resources:
+  AddVisitFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: add-visit.lambda_handler
+      Runtime: python3.8
+      Timeout: 60
+      CodeUri: s3://sam-study/852ed3c30bf51fa9d861e96836c5eb03
+      Description: Samples SAM Lambda Deployment
+      Events:
+        HttpPost:
+          Type: Api
+          Properties:
+            Path: /visits/store
+            Method: get
